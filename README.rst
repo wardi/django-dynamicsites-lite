@@ -20,28 +20,28 @@ Configuration
 
  1. Before you install dynamic sites, make sure you have configured at least 1 site in the admin panel, because once dynamicsites is installed, it will try to lookup a site from request.get_host, and, if non exists, will always throw 404
 
- 2. Add the app to INSTALLED_APPS::
+ 2. Add the app to INSTALLED_APPS ::
 
     INSTALLED_APPS = (
         ...
         'dynamicsites',
     )
 
- 3. Add the middleware to MIDDLEWARE_CLASSES::
+ 3. Add the middleware to MIDDLEWARE_CLASSES ::
 
     MIDDLEWARE_CLASSES = (
         ...
         'dynamicsites.middleware.DynamicSitesMiddleware'
     )
 
- 4. Add the context processor to TEMPLATE_CONTEXT_PROCESSORS::
+ 4. Add the context processor to TEMPLATE_CONTEXT_PROCESSORS ::
 
     TEMPLATE_CONTEXT_PROCESSORS = (
         ...
         'dynamicsites.context_processors.current_site',
     )
 
- 5. Configure dynamicsites by adding DEFAULT_HOST and HOSTNAME_REDIRECTS to settings.py::
+ 5. Configure dynamicsites by adding DEFAULT_HOST and HOSTNAME_REDIRECTS to settings.py ::
 
     DEFAULT_HOST = 'www.your-default-site.com'
     HOSTNAME_REDIRECTS = {
@@ -49,7 +49,7 @@ Configuration
         ...
     }
 
- 6. If your local environment (eg. test, dev, staging) uses different hostnames than production, set the ENV_HOSTNAMES map as well::
+ 6. If your local environment (eg. test, dev, staging) uses different hostnames than production, set the ENV_HOSTNAMES map as well ::
 
     ENV_HOSTNAMES = {
         'my-site.dev':    'www.your-default-site.com',
