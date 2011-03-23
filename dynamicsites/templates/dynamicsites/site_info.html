@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Site Info for {{site.name}}!{% endblock %}
+
+{% block content %}
+<table>
+	<tr>
+		<td>Name</td>
+		<td>{{ site.name }}</td>
+	</tr>
+	<tr>
+		<td>ID</td>
+		<td>{{ site.id }}</td>
+	</tr>
+	<tr>
+		<td>Domain</td>
+		<td>{{ site.domain }}</td>
+	</tr>
+	<tr>
+		<td>Folder name</td>
+		<td>{{ site.folder_name }}</td>
+	</tr>
+	<tr>
+		<td>Supported subdomains</td>
+		<td>{{ site.subdomains }}</td>
+	</tr>
+	<tr>
+		<td>Requested subdomain</td>
+		<td>{{ request.subdomain }}</td>
+	</tr>
+</table>
+{% endblock %}
