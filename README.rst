@@ -3,22 +3,23 @@ dynamicsites
 
 By UYSRC <http://www.uysrc.com/>
 
-Host multiple sites from a single django project
+Host multiple sites from a single django project 
 
 Expands the standard django.contrib.sites package to allow for:
 
  * Sites identified dynamically from the request via middleware
+ * No need for multiple virtual hosts at the webserver level
  * 301 Redirects to canonical hostnames
  * Allows for a site to support multiple subdomains
  * Allows for a site to be an independent subdomain of another site
  * A site may have its own urls.py and templates
  * A single site may accept requests from multiple hostnames
- * Allows for environment hosntname mappings to use non-production hostnames (for use in dev, staging, test, etc. environments)
+ * Allows for environment hostname mappings to use non-production hostnames (for use in dev, staging, test, etc. environments)
 
 Configuration
 -------------
 
- 1. Before you install dynamic sites, make sure you have configured at least 1 site in the admin panel, because once dynamicsites is installed, it will try to lookup a site from request.get_host, and, if non exists, will always throw 404
+ 1. Before you install dynamicsites, make sure you have configured at least 1 site in the admin panel, because once dynamicsites is installed, it will try to lookup a site from request.get_host(), and, if none exists, will always throw 404
 
  2. Add the app to INSTALLED_APPS ::
 
