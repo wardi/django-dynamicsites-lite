@@ -41,8 +41,9 @@ Configuration
             'dynamicsites.context_processors.current_site',
         )
 
- 5. Configure dynamicsites by adding DEFAULT_HOST and HOSTNAME_REDIRECTS to settings.py ::
+ 5. Configure dynamicsites by adding SITES_DIR, DEFAULT_HOST, and HOSTNAME_REDIRECTS to settings.py ::
 
+        SITES_DIR = os.path.join(os.path.dirname(__file__), 'sites')
         DEFAULT_HOST = 'www.your-default-site.com'
         HOSTNAME_REDIRECTS = {
             'redirect-src-1.com':         'www.redirect-dest-1.com',
