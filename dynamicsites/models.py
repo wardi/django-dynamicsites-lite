@@ -13,7 +13,7 @@ Future ideas include:
 
 # not sure which is better...
 # Site.add_to_class('subdomains', SubdomainListField(blank=True))
-FolderNameField().contribute_to_class(Site,'folder_name')
+FolderNameField(blank=True).contribute_to_class(Site,'folder_name')
 SubdomainListField(blank=True).contribute_to_class(Site,'subdomains')
 
 @property
