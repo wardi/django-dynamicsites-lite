@@ -176,8 +176,15 @@ class DynamicSitesMiddleware(object):
                 site_id,
                 cache_key)
             SITE_ID.value = site_id
-            self.site = Site.objects.get(id=site_id)
-            return None
+            try:
+                self.site = Site.objects.get(id=site_id)
+            except Site.DoesNotExist:
+                # This might happen if the Site object was deleted from the
+                # database after it was cached.  Remove from cache and act
+                # as if the cache lookup failed.
+                cache.delete(cache_key)
+            else:
+                return None
 
         # check datastore
         try:
