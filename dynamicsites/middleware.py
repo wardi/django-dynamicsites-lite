@@ -123,11 +123,12 @@ class DynamicSitesMiddleware(object):
         port number.  Return a tuple of domain, port number.  
         Domain will be lowercased
         """
-        if ':' in self.request.get_host():
-            domain, port = self.request.get_host().split(':')
+        host = self.request.get_host()
+        if ':' in host:
+            domain, port = host.split(':')
             return (domain.lower(), port)
         else:
-            return (self.request.get_host().lower(), 
+            return (host.lower(), 
                 self.request.META.get('SERVER_PORT'))
 
 
