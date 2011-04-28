@@ -10,7 +10,7 @@ import logging
 import os
 
 SITE_ID = settings.__class__.SITE_ID = make_tls_property()
-TEMPLATE_DIRS = settings.__class__.TEMPLATE_DIRS = make_tls_property()
+TEMPLATE_DIRS = settings.__class__.TEMPLATE_DIRS = make_tls_property(settings.TEMPLATE_DIRS)
 
 class DynamicSitesMiddleware(object):
     """
