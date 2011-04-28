@@ -10,7 +10,7 @@ import logging
 import os
 
 SITE_ID = settings.__class__.SITE_ID = make_tls_property()
-TEMPLATES_DIR = settings.__class__.TEMPLATES_DIR = make_tls_property()
+TEMPLATE_DIRS = settings.__class__.TEMPLATE_DIRS = make_tls_property()
 
 class DynamicSitesMiddleware(object):
     """
@@ -98,12 +98,12 @@ class DynamicSitesMiddleware(object):
                             'cannot find sites.%s.urls for urlconf... skipping',
                             self.site.folder_name)
                         pass
-                    # add site templates dir to TEMPLATES_DIR
+                    # add site templates dir to TEMPLATE_DIRS
                     self.logger.debug(
-                        'adding %s to TEMPLATES_DIR', 
+                        'adding %s to TEMPLATE_DIRS', 
                         os.path.join(settings.SITES_DIR, folder_name, 'templates'))
-                    TEMPLATES_DIR = (os.path.join(settings.SITES_DIR,
-                        folder_name, 'templates'),) + TEMPLATES_DIR
+                    TEMPLATE_DIRS = (os.path.join(settings.SITES_DIR,
+                        folder_name, 'templates'),) + TEMPLATE_DIRS
             except NameError:
                 pass
 
