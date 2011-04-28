@@ -83,29 +83,27 @@ class DynamicSitesMiddleware(object):
             self.request.subdomain = (self.subdomain) and self.subdomain or ''
             self.request.port = self.port
 
-            try:
-                if self.site.folder_name:
-                    # set from where urlconf will be loaded if it exists
-                    try:
-                        urlconf_pkg = '%s.urls' % self.site.folder_name
-                        __import__("sites.%s" % urlconf_pkg)
-                        self.logger.debug('using sites.%s for urlconf',
-                            urlconf_pkg)
-                        self.request.urlconf = urlconf_pkg
-                    except ImportError:
-                        # urlconf doesn't exist... skip it
-                        self.logger.debug(
-                            'cannot find sites.%s.urls for urlconf... skipping',
-                            self.site.folder_name)
-                        pass
-                    # add site templates dir to TEMPLATE_DIRS
+            if self.site.folder_name:
+                folder_name = self.site.folder_name
+                # set from where urlconf will be loaded if it exists
+                try:
+                    urlconf_pkg = '%s.urls' % folder_name
+                    __import__("sites.%s" % urlconf_pkg)
+                    self.logger.debug('using sites.%s for urlconf',
+                        urlconf_pkg)
+                    self.request.urlconf = urlconf_pkg
+                except ImportError:
+                    # urlconf doesn't exist... skip it
                     self.logger.debug(
-                        'adding %s to TEMPLATE_DIRS', 
-                        os.path.join(settings.SITES_DIR, folder_name, 'templates'))
-                    TEMPLATE_DIRS = (os.path.join(settings.SITES_DIR,
-                        folder_name, 'templates'),) + TEMPLATE_DIRS
-            except NameError:
-                pass
+                        'cannot find sites.%s.urls for urlconf... skipping',
+                        folder_name)
+                    pass
+                # add site templates dir to TEMPLATE_DIRS
+                self.logger.debug(
+                    'adding %s to TEMPLATE_DIRS', 
+                    os.path.join(settings.SITES_DIR, folder_name, 'templates'))
+                TEMPLATE_DIRS.value = (os.path.join(settings.SITES_DIR,
+                    folder_name, 'templates'),) + TEMPLATE_DIRS.value
 
         return res
 
