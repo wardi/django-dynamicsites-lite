@@ -119,6 +119,7 @@ class DynamicSitesMiddleware(object):
         # processing the request
         if not self._old_TEMPLATE_DIRS is None:
             settings.TEMPLATE_DIRS = self._old_TEMPLATE_DIRS
+        SITE_ID.value = None
         return response
 
 
@@ -181,9 +182,9 @@ class DynamicSitesMiddleware(object):
             self.logger.debug('Found site_id=%s from cache.get(\'%s\')',
                 site_id,
                 cache_key)
-            SITE_ID.value = site_id
             try:
                 self.site = Site.objects.get(id=site_id)
+                SITE_ID.value = site_id
             except Site.DoesNotExist:
                 # This might happen if the Site object was deleted from the
                 # database after it was cached.  Remove from cache and act
