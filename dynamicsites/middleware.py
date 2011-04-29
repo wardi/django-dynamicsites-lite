@@ -9,8 +9,8 @@ from utils import make_tls_property
 import logging
 import os
 
-SITE_ID = settings.__class__.SITE_ID = make_tls_property()
-TEMPLATE_DIRS = settings.__class__.TEMPLATE_DIRS = make_tls_property(settings.TEMPLATE_DIRS)
+SITE_ID = settings.__dict__['_wrapped'].__class__.SITE_ID = make_tls_property()
+TEMPLATE_DIRS = settings.__dict__['_wrapped'].__class__.TEMPLATE_DIRS = make_tls_property(settings.TEMPLATE_DIRS)
 
 class DynamicSitesMiddleware(object):
     """
@@ -29,6 +29,7 @@ class DynamicSitesMiddleware(object):
         self.domain_unsplit = self.domain
         self.subdomain = None
         self.env_domain_requested = None
+        self._old_TEMPLATE_DIRS = getattr(settings, "TEMPLATE_DIRS", None)
 
         # main loop - lookup the site by domain/subdomain, plucking 
         # subdomains off the request hostname until a site or
@@ -114,6 +115,10 @@ class DynamicSitesMiddleware(object):
         """
         if getattr(request, "urlconf", None):
             patch_vary_headers(response, ('Host',))
+        # reset TEMPLATE_DIRS because we unconditionally add to it when
+        # processing the request
+        if not self._old_TEMPLATE_DIRS is None:
+            settings.TEMPLATE_DIRS = self._old_TEMPLATE_DIRS
         return response
 
 
