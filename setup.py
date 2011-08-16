@@ -5,7 +5,7 @@ from distutils.core import setup
 version = __import__('dynamicsites').get_version()
 
 setup(
-    name='django-dynamicsites',
+    name='dynamicsites',
     version=version,
     description="Host multiple sites from a single django project",
     long_description="""Expands the standard django.contrib.sites package to allow for:
@@ -24,4 +24,5 @@ setup(
     url='https://bitbucket.org/ladyrassilon/django-dynamicsites',
     license='Free as in Beer',
     platforms=['any'],
+    packages=['dynamicsites'],
 )
