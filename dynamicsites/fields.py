@@ -3,6 +3,8 @@ from django.db import models
 from django.core.validators import URLValidator, ValidationError
 from django.utils.encoding import smart_unicode
 from widgets import SubdomainTextarea, FolderNameInput
+
+
 import re
 
 import logging
@@ -126,3 +128,7 @@ class FolderNameField(models.CharField):
         defaults = {'form_class':FolderNameFormField}
         defaults.update(kwargs)
         return super(FolderNameField, self).formfield(**defaults)
+
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^dynamicsites\.fields\.SubdomainListField"])
+add_introspection_rules([], ["^dynamicsites\.fields\.FolderNameField"])
