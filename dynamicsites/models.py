@@ -11,6 +11,16 @@ Future ideas include:
 * Account subdomains (ala basecamp)
 """
 
+try:
+    # This is needed to generate the migration, which generally need only
+    # be done once.
+    # http://south.aeracode.org/wiki/MyFieldsDontWork
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^dynamicsites"])
+except:
+    pass
+
+
 # not sure which is better...
 # Site.add_to_class('subdomains', SubdomainListField(blank=True))
 FolderNameField(blank=True).contribute_to_class(Site,'folder_name')
