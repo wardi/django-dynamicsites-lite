@@ -59,14 +59,15 @@ Configuration
         }
 
  7. make ``sites`` dir (from the SITES_DIR setting above) and put a ``__init__.py`` file inside
- 7b. make a site dir for each site you're hosting (eg. ``mkdir sites/{{mysyte}}``) <-- you'll put ``{{mysyte}}`` in the admin screen when you go to configure mysyte there
 
- 8. run ``syncdb``.  If your django_site table fails to modify, you will need to modify the table via sql::
+ 8. make a site dir for each site you're hosting (eg. ``mkdir sites/{{mysyte}}``) <-- you'll put ``{{mysyte}}`` in the admin screen when you go to configure mysyte there
+
+ 9. run ``syncdb``.  If your django_site table fails to modify, you will need to modify the table via sql::
 
         alter table django_site add column folder_name varchar(255);
         alter table django_site add column subdomains varchar(255);
         
- 9. go to the admin panel for sites.  You should see two fields added now, one for the site folder name (#7b above) and another for which subdomains you wish to support
+ 10. go to the admin panel for sites.  You should see two fields added now, one for the site folder name (#8 above) and another for which subdomains you wish to support
  
 More Info
 ---------
