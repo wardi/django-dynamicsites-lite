@@ -117,8 +117,11 @@ class DynamicSitesMiddleware(object):
             patch_vary_headers(response, ('Host',))
         # reset TEMPLATE_DIRS because we unconditionally add to it when
         # processing the request
-        if not self._old_TEMPLATE_DIRS is None:
-            settings.TEMPLATE_DIRS = self._old_TEMPLATE_DIRS
+        try:
+            if self._old_TEMPLATE_DIRS is not None:
+                settings.TEMPLATE_DIRS = self._old_TEMPLATE_DIRS
+        except AttributeError:
+            pass
         return response
 
 

@@ -66,7 +66,7 @@ class SubdomainListField(models.TextField):
         defaults.update(kwargs)
         return super(SubdomainListField, self).formfield(**defaults)
 
-    def get_db_prep_value(self, value):
+    def get_db_prep_value(self, value, connection=None, prepared=False):
         if not value: return ""
         assert(isinstance(value, list) or isinstance(value, tuple))
         return u','.join([smart_unicode(s) for s in value])
