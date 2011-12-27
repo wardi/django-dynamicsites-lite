@@ -26,6 +26,8 @@ def default_subdomain(self):
     Return the first subdomain in self.subdomains or '' if no subdomains defined
     """
     if len(self.subdomains):
+        if self.subdomains[0]=="''":
+            return ''
         return self.subdomains[0]
     return ''
 

@@ -68,7 +68,14 @@ Configuration
         alter table django_site add column subdomains varchar(255);
         
  10. go to the admin panel for sites.  You should see two fields added now, one for the site folder name (#8 above) and another for which subdomains you wish to support
- 
+
+Configuration
+-------------
+
+Using dynamicsites you can host multiple sites within a single domain.  This may be the most common setup.  This will allow different url mappings by subdomain.  To do this you'll need to create a site object for the different subdomain sites.
+
+Within the list of subdomains for a site, the first subdomain listed will be the default subdomain.  If you want the default subdomain to be blank, put '' (single quote empty string) as the first subdomain in the subdomain list in the admin panel for sites.
+
 More Info
 ---------
 

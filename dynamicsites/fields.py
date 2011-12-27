@@ -5,11 +5,13 @@ from django.utils.encoding import smart_unicode
 from widgets import SubdomainTextarea, FolderNameInput
 import re
 
+import logging
 
 class SubdomainListFormField(forms.Field):
 
     def __init__(self, *args, **kwargs):
         kwargs['widget'] = SubdomainTextarea()
+        self.logger = logging.getLogger(__name__)
         super(SubdomainListFormField, self).__init__(*args, **kwargs)
 
     """
@@ -44,8 +46,14 @@ class SubdomainListFormField(forms.Field):
 
         u = URLValidator()
         for subdomain in value:
-            test_host = 'http://%s.example.com/' % subdomain
-            u(test_host)
+            self.logger.debug('validating %s', subdomain)
+            if subdomain == "''":
+                self.logger.debug('passing')
+                pass
+            else:
+                test_host = 'http://%s.example.com/' % subdomain
+                self.logger.debug('testing %s', test_host)
+                u(test_host)
 
 class SubdomainListField(models.TextField):
     __metaclass__ = models.SubfieldBase

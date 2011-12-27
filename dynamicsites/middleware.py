@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.contrib.sites.models import Site
 from django.http import HttpResponsePermanentRedirect, Http404
+from django.shortcuts import render_to_response
 from django.utils.cache import patch_vary_headers
 from django.utils.http import urlquote
 from utils import make_tls_property
@@ -60,7 +61,12 @@ class DynamicSitesMiddleware(object):
                 
             # check to make sure the subdomain is supported
             if self.site.has_subdomains:
-                if not self.subdomain or self.subdomain not in self.site.subdomains:
+                gotta_redirect = False
+                if not self.subdomain and "''" not in self.site.subdomains:
+                    gotta_redirect = True
+                if self.subdomain and self.subdomain not in self.site.subdomains:
+                    gotta_redirect = True
+                if gotta_redirect:
                     # if not, redirect to default subdomain
                     self.logger.debug(
                         'Redirecting to default_subdomain=%s',
@@ -195,10 +201,10 @@ class DynamicSitesMiddleware(object):
             else:
                 return None
 
-        # check datastore
+        # check database
         try:
             self.logger.debug(
-                'Checking datastore for domain=%s', 
+                'Checking database for domain=%s', 
                 self.domain)
             self.site = Site.objects.get(domain=self.domain)
         except Site.DoesNotExist:
@@ -210,15 +216,37 @@ class DynamicSitesMiddleware(object):
         cache.set(cache_key, SITE_ID.value, 5*60)
         return None
 
-    
     def _redirect(self, new_host, subdomain=None):
+        """experimental: 
+        wrapper around _redirect_real to throw up
+        any django debug toolbar redirect notices.
+        Note todo: this is not properly respecting
+        the django debug toolbar's IP address restriction"""
+        response = self._redirect_real(new_host, subdomain)
+        dtc = getattr(settings, "DEBUG_TOOLBAR_CONFIG", None)
+        try:
+            if dtc.get('INTERCEPT_REDIRECTS', False):
+                if isinstance(response, HttpResponsePermanentRedirect):
+                    redirect_to = response.get('Location', None)
+                    if redirect_to:
+                        cookies = response.cookies
+                        response = render_to_response(
+                            'debug_toolbar/redirect.html',
+                            {'redirect_to': redirect_to}
+                        )
+                        response.cookies = cookies
+        except AttributeError:
+            pass
+        return response
+
+    def _redirect_real(self, new_host, subdomain=None):
         """
         Tries its best to preserve request protocol, port, path, 
         and query args.  Only works with HTTP GET
         """
         return HttpResponsePermanentRedirect('%s://%s%s%s%s%s' % (
             self.request.is_secure() and 'https' or 'http',
-            (subdomain) and '%s.' % subdomain or '',
+            (subdomain and subdomain is not "''") and '%s.' % subdomain or '',
             new_host,
             (int(self.port) not in (80, 443)) and ':%s' % self.port or '',
             urlquote(self.request.path),
@@ -237,7 +265,7 @@ class DynamicSitesMiddleware(object):
                 new_host,
                 self.env_domain_requested)
             # does a env_hostname exist for the target redirect?
-            target_domain = '%s%s' % ((subdomain) and '%s.' % subdomain or '', new_host)
+            target_domain = '%s%s' % ((subdomain and subdomain is not "''") and '%s.' % subdomain or '', new_host)
             target_env_hostname = self.find_env_hostname(target_domain)
             target_subdomain=None
             while not target_env_hostname and target_domain:
@@ -255,7 +283,7 @@ class DynamicSitesMiddleware(object):
             self.logger.debug(
                 'No ENV_HOSTNAME map found for %s', 
                 new_host)
-        self._redirect(new_host, subdomain)
+        return self._redirect(new_host, subdomain)
 
     def find_env_hostname(self, target_domain):
         for k, v in self.ENV_HOSTNAMES.iteritems():
