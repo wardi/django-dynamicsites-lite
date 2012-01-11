@@ -76,7 +76,7 @@ Using dynamicsites you can host multiple sites within a single domain.  This may
 
 Within the list of subdomains for a site, the first subdomain listed will be the default subdomain.  If you want the default subdomain to be blank, put '' (single quote empty string) as the first subdomain in the subdomain list in the admin panel for sites.
 
-DEBUGGING
+Debugging
 ---------
 
 In the current codebase, if you have the django debug toolba unstalled and enable redirect tracking, ie. 
@@ -88,6 +88,13 @@ In the current codebase, if you have the django debug toolba unstalled and enabl
     }
 
 django-dynamicsites will intercept redirects, which is very helpful when dialing in your site config.
+
+There's also a view included with the codebase which is useful for checking which site dynamicsites thinks you're seeing.  Just add an entry to your urls.py file::
+
+    from dynamicsites.views import site_info
+
+    urlpatterns += patterns('',
+        url(r'^site-info$', site_info),)
 
 Notes
 -----
