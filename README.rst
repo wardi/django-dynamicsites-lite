@@ -47,7 +47,7 @@ Configuration
         SITES_DIR = os.path.join(os.path.dirname(__file__), 'sites')
         DEFAULT_HOST = 'www.your-default-site.com'
         HOSTNAME_REDIRECTS = {
-            'redirect-src-1.com':         'www.redirect-dest-1.com',
+        #    'redirect-src-1.com':         'www.redirect-dest-1.com',
             ...
         }
 
@@ -57,6 +57,50 @@ Configuration
             'my-site.dev':    'www.your-default-site.com',
             ...
         }
+
+ 7. make ``sites`` dir (from the SITES_DIR setting above) and put a ``__init__.py`` file inside
+
+ 8. make a site dir for each site you're hosting (eg. ``mkdir sites/{{mysyte}}``) <-- you'll put ``{{mysyte}}`` in the admin screen when you go to configure mysyte there.  Make sure to put an ``__init__.py`` file in each site dir as well.
+
+ 9. run ``syncdb``.  If your django_site table fails to modify, you will need to modify the table via sql::
+
+        alter table django_site add column folder_name varchar(255);
+        alter table django_site add column subdomains varchar(255);
+        
+ 10. go to the admin panel for sites.  You should see two fields added now, one for the site folder name (#8 above) and another for which subdomains you wish to support
+
+Configuration
+-------------
+
+Using dynamicsites you can host multiple sites within a single domain.  This may be the most common setup.  This will allow different url mappings by subdomain.  To do this you'll need to create a site object for the different subdomain sites.
+
+Within the list of subdomains for a site, the first subdomain listed will be the default subdomain.  If you want the default subdomain to be blank, put '' (single quote empty string) as the first subdomain in the subdomain list in the admin panel for sites.
+
+Debugging
+---------
+
+In the current codebase, if you have the django debug toolba unstalled and enable redirect tracking, ie. 
+
+::
+
+    DEBUG_TOOLBAR_CONFIG = {
+        'INTERCEPT_REDIRECTS': True,
+    }
+
+django-dynamicsites will intercept redirects, which is very helpful when dialing in your site config.
+
+There's also a view included with the codebase which is useful for checking which site dynamicsites thinks you're seeing.  Just add an entry to your urls.py file::
+
+    from dynamicsites.views import site_info
+
+    urlpatterns += patterns('',
+        url(r'^site-info$', site_info),)
+
+Notes
+-----
+
+* you need to run syncdb after dynamicsites is installed (to be sure the fields folder_name and subdomains is added to the standard Site model)
+* in sites folder, each folder must have a __init__.py file.
 
 More Info
 ---------
