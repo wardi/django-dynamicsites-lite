@@ -2,10 +2,10 @@ import os
 import sys
 from distutils.core import setup
 
-version = __import__('dynamicsites').get_version()
+version = __import__('dynamicsiteslite').get_version()
 
 setup(
-    name='dynamicsites',
+    name='dynamicsiteslite',
     version=version,
     description="Host multiple sites from a single django project",
     long_description="""Expands the standard django.contrib.sites package to allow for:
