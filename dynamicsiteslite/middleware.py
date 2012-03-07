@@ -58,22 +58,7 @@ class DynamicSitesMiddleware(object):
             self.logger.debug('Using site id=%s domain=%s',
                 self.site.id,
                 self.site.domain)
-                
-            # check to make sure the subdomain is supported
-            if self.site.has_subdomains:
-                gotta_redirect = False
-                if not self.subdomain and "''" not in self.site.subdomains:
-                    gotta_redirect = True
-                if self.subdomain and self.subdomain not in self.site.subdomains:
-                    gotta_redirect = True
-                if gotta_redirect:
-                    # if not, redirect to default subdomain
-                    self.logger.debug(
-                        'Redirecting to default_subdomain=%s',
-                        self.site.default_subdomain)
-                    return self.redirect(self.domain,
-                        subdomain=self.site.default_subdomain)
-                
+
             # make sure the domain requested is the subdomain/domain 
             # (ie. domain_unsplit) we used to locate the site
             if self.domain_requested is not self.domain_unsplit:
@@ -90,8 +75,8 @@ class DynamicSitesMiddleware(object):
             self.request.subdomain = (self.subdomain) and self.subdomain or ''
             self.request.port = self.port
 
-            if self.site.folder_name:
-                folder_name = self.site.folder_name
+            folder_name = site_folder_name(self.site)
+            if folder_name:
                 # set from where urlconf will be loaded if it exists
                 try:
                     urlconf_pkg = '%s.urls' % folder_name
@@ -289,3 +274,10 @@ class DynamicSitesMiddleware(object):
         for k, v in self.ENV_HOSTNAMES.iteritems():
             if v == target_domain:
                 return k
+
+
+def site_folder_name(site):
+    """
+    Just a simple implementation to start.
+    """
+    return site.domain.replace('.', '_')
