@@ -25,21 +25,21 @@ Configuration
 
         INSTALLED_APPS = (
             ...
-            'dynamicsites',
+            'dynamicsiteslite',
         )
 
  3. Add the middleware to MIDDLEWARE_CLASSES ::
     
         MIDDLEWARE_CLASSES = (
             ...
-            'dynamicsites.middleware.DynamicSitesMiddleware'
+            'dynamicsiteslite.middleware.DynamicSitesMiddleware'
         )
 
  4. Add the context processor to TEMPLATE_CONTEXT_PROCESSORS ::
 
         TEMPLATE_CONTEXT_PROCESSORS = (
             ...
-            'dynamicsites.context_processors.current_site',
+            'dynamicsiteslite.context_processors.current_site',
         )
 
  5. Configure dynamicsites by adding SITES_DIR, DEFAULT_HOST, and HOSTNAME_REDIRECTS to settings.py ::
