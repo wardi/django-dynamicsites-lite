@@ -22,7 +22,6 @@ setup(
     maintainer='Bas van Oostveen',
     maintainer_email='v.oostveen@gmail.com',
     url='https://bitbucket.org/ladyrassilon/django-dynamicsites',
-    license='Free as in Beer',
     platforms=['any'],
     packages=['dynamicsites'],
 )
