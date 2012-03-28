@@ -162,3 +162,4 @@ DEFAULT_HOST = 'host1.example.com'
 HOSTNAME_REDIRECTS = {
     'redirect1.example.com': 'host3.example.com',
 }
+SITES_FILTER = {'domain__endswith':'.example.com'}

@@ -176,7 +176,7 @@ class DynamicSitesMiddleware(object):
                 site_id,
                 cache_key)
             try:
-                self.site = Site.objects.get(id=site_id)
+                self.site = all_sites().get(id=site_id)
                 SITE_ID.value = site_id
             except Site.DoesNotExist:
                 # This might happen if the Site object was deleted from the
@@ -191,7 +191,7 @@ class DynamicSitesMiddleware(object):
             self.logger.debug(
                 'Checking database for domain=%s', 
                 self.domain)
-            self.site = Site.objects.get(domain=self.domain)
+            self.site = all_sites().get(domain=self.domain)
         except Site.DoesNotExist:
             return False
         if not self.site:
@@ -281,3 +281,9 @@ def site_folder_name(site):
     Just a simple implementation to start.
     """
     return site.domain.replace('.', '_')
+
+def all_sites():
+    """
+    Apply optional SITES_FILTER setting to Site.objects
+    """
+    return Site.objects.filter(**getattr(settings, 'SITES_FILTER', {}))

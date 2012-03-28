@@ -59,6 +59,9 @@ Configuration
 
  8. make a site dir for each site you're hosting (eg. ``mkdir sites/www_mysitesdomain_com``) <-- put underscores instead of dots in the domain name, these need to be imported as python packages.  Make sure to put an ``__init__.py`` file in each site dir as well.
 
+ 9. add a SITES_FILTER setting if you want to restrict the sites served by this project.  SITES_FILTER is a dict used as follows when dynamicsiteslite looks up sites in the database::
+
+        Site.objects.filter(**SITES_FILTER)
 
 Debugging
 ---------
