@@ -15,5 +15,5 @@ def site_info(request):
         'http_host':request.META['HTTP_HOST'],
         'site':site
     }
-    return render_to_response('dynamicsites/site_info.html', args,
+    return render_to_response('dynamicsiteslite/site_info.html', args,
         context_instance=RequestContext(request))
