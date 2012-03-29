@@ -13,6 +13,9 @@ import os
 SITE_ID = settings.__dict__['_wrapped'].__class__.SITE_ID = make_tls_property()
 TEMPLATE_DIRS = settings.__dict__['_wrapped'].__class__.TEMPLATE_DIRS = make_tls_property(settings.TEMPLATE_DIRS)
 
+class DynamicSitesError(Exception):
+    pass
+
 class DynamicSitesMiddleware(object):
     """
     Sets settings.SITE_ID based on request's domain.
@@ -229,9 +232,15 @@ class DynamicSitesMiddleware(object):
         Tries its best to preserve request protocol, port, path, 
         and query args.  Only works with HTTP GET
         """
-        return HttpResponsePermanentRedirect('%s://%s%s%s%s%s' % (
+        if subdomain and subdomain is not "''":
+            new_host = subdomain + "." + new_host
+        if (new_host, self.port) == self.get_domain_and_port():
+            raise DynamicSitesError("Redirect loop detected. The domain"
+                " specified in settings.DEFAULT_HOST: '%s' may not exist"
+                " in the Sites table." % settings.DEFAULT_HOST)
+
+        return HttpResponsePermanentRedirect('%s://%s%s%s%s' % (
             self.request.is_secure() and 'https' or 'http',
-            (subdomain and subdomain is not "''") and '%s.' % subdomain or '',
             new_host,
             (int(self.port) not in (80, 443)) and ':%s' % self.port or '',
             urlquote(self.request.path),
