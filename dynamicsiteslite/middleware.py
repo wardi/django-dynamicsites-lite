@@ -40,7 +40,6 @@ class DynamicSitesMiddleware(object):
             try:
                 self.domain_unsplit = self.domain
                 self.subdomain, self.domain = self.domain.split('.', 1)
-                res = self.lookup()
             except ValueError:
                 try:
                     self.logger.debug(
@@ -49,6 +48,7 @@ class DynamicSitesMiddleware(object):
                     return self.redirect(settings.DEFAULT_HOST)
                 except AttributeError:
                     raise Http404
+            res = self.lookup()
 
         # At this point res can be either None, meaning we have a site,
         # or an HttpResponsePermanentRedirect obj
