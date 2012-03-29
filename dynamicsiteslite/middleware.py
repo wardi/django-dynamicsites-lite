@@ -83,15 +83,15 @@ class DynamicSitesMiddleware(object):
                 # set from where urlconf will be loaded if it exists
                 try:
                     urlconf_pkg = '%s.urls' % folder_name
-                    __import__("sites.%s" % urlconf_pkg)
+                    __import__("%s.%s" % (settings.SITES_PACKAGE, urlconf_pkg))
                     self.logger.debug('using sites.%s for urlconf',
                         urlconf_pkg)
                     self.request.urlconf = urlconf_pkg
                 except ImportError:
                     # urlconf doesn't exist... skip it
                     self.logger.debug(
-                        'cannot find sites.%s.urls for urlconf... skipping',
-                        folder_name)
+                        'cannot find %s.%s.urls for urlconf... skipping',
+                        settings.SITES_PACKAGE, folder_name)
                     pass
                 # add site templates dir to TEMPLATE_DIRS
                 self.logger.debug(
