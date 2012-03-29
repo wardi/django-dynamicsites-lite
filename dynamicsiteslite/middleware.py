@@ -263,7 +263,10 @@ class DynamicSitesMiddleware(object):
             target_env_hostname = self.find_env_hostname(target_domain)
             target_subdomain=None
             while not target_env_hostname and target_domain:
-                target_subdomain, target_domain = target_domain.split('.',1)
+                try:
+                    target_subdomain, target_domain = target_domain.split('.',1)
+                except ValueError:
+                    break
                 target_env_hostname = self.find_env_hostname(target_domain)
             if target_env_hostname:
                 self.logger.debug(
