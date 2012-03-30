@@ -82,10 +82,10 @@ class DynamicSitesMiddleware(object):
             if folder_name:
                 # set from where urlconf will be loaded if it exists
                 try:
-                    urlconf_pkg = '%s.urls' % folder_name
-                    __import__("%s.%s" % (settings.SITES_PACKAGE, urlconf_pkg))
-                    self.logger.debug('using sites.%s for urlconf',
-                        urlconf_pkg)
+                    urlconf_pkg = '%s.%s.urls' % (
+                        settings.SITES_PACKAGE, folder_name)
+                    __import__(urlconf_pkg)
+                    self.logger.debug('using %s for urlconf', urlconf_pkg)
                     self.request.urlconf = urlconf_pkg
                 except ImportError:
                     # urlconf doesn't exist... skip it
