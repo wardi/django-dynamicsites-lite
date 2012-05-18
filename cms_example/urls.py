@@ -1,11 +1,14 @@
 from django.conf.urls.defaults import patterns, include, url
 
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+
+admin.site.index_template = 'admin/index_filebrowser.html'
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^admin/filebrowser/', include('filebrowser.urls')),
     url(r'^admin/', include(admin.site.urls)),
+
 )
 
 # THIS MUST BE LAST
