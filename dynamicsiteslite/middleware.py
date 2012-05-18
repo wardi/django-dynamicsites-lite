@@ -99,6 +99,7 @@ class DynamicSitesMiddleware(object):
                     os.path.join(settings.SITES_DIR, folder_name, 'templates'))
                 TEMPLATE_DIRS.value = (os.path.join(settings.SITES_DIR,
                     folder_name, 'templates'),) + TEMPLATE_DIRS.value
+                request.dynamicsites_folder_name = folder_name
 
         return res
 
