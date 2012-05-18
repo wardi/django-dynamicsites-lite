@@ -1,5 +1,5 @@
 django-page-cms
-django-filebrowser-no-grappelli
+django-filebrowser-no-grappelli>=3.1
 django-mptt
 django-authority
 
