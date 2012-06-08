@@ -2,5 +2,6 @@ syntax: glob
 *.pyc
 build/
 example/example.db
+cms_example/example.db
 MANIFEST
 dist/
