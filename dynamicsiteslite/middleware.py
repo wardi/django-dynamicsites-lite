@@ -16,7 +16,7 @@ TEMPLATE_DIRS = settings.__dict__['_wrapped'].__class__.TEMPLATE_DIRS = make_tls
 class DynamicSitesError(Exception):
     pass
 
-class DynamicSitesMiddleware(object):
+class DynamicSitesHandler(object):
     """
     Sets settings.SITE_ID based on request's domain.
     Also handles hostname redirects, and ensures the 
@@ -288,6 +288,13 @@ class DynamicSitesMiddleware(object):
             if v == target_domain:
                 return k
 
+class DynamicSitesMiddleware(object):
+    def process_request(self, request):
+        request.dynamic_sites_handler = DynamicSitesHandler()
+        return request.dynamic_sites_handler.process_request(request)
+
+    def process_response(self, request, response):
+        return request.dynamic_sites_handler.process_response(request, response)
 
 def site_folder_name(site):
     """
